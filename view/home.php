@@ -7,7 +7,8 @@
     </head>
     <body>
         <article>
-            <h1>Login</h1>
+            <h1 class="center">TimeTracker</h1>
+            <h2>Login</h2>
             <?php
                 if (isset($message)) 
                 {
@@ -23,7 +24,7 @@
                 <button type="submit" id="loginButton">login</button>
                 <input type="hidden" name="action" value="Login">
             </form>
-            <h1>No Account? Register Now!</h1>
+            <h2>No Account? Register Now!</h2>
             <form id="register" method="POST" action="/TimeTracker/">
                 <label id="emailRegister" for="userEmail">Email</label>
                 <input name="userEmail" id="userEmail" type="email" required <?php if(isset($userEmail)){echo "value='$userEmail'";}  ?>>

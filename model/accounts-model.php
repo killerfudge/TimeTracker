@@ -3,12 +3,12 @@
 // This function will handle registering new users to the site
 function regUser($userEmail, $userPassword)
 {
-    // Create a connection object using the phpmotors connection function
+    // Create a connection object using the TimeTracker connection function
     $db = TimeTrackerConnect();
     // The SQL statement
     $sql = 'INSERT INTO user (userEmail, userPassword)
         VALUES (:userEmail, :userPassword)';
-    // Create the prepared statement using the phpmotors connection
+    // Create the prepared statement using the TimeTracker connection
     $stmt = $db->prepare($sql);
     // The next four lines replace the placeholders in the SQL
     // statement with the actual values in the variables
@@ -27,11 +27,11 @@ function regUser($userEmail, $userPassword)
 // This function will check if an email already exists
 function checkExistingEmail($userEmail)
 {
-    // Create a connection object using the phpmotors connection function
+    // Create a connection object using the TimeTracker connection function
     $db = TimeTrackerConnect();
     // The SQL statement
     $sql = 'SELECT userEmail FROM user WHERE userEmail = :userEmail';
-    // Create the prepared statement using the phpmotors connection
+    // Create the prepared statement using the TimeTracker connection
     $stmt = $db->prepare($sql);
     // The next four lines replace the placeholders in the SQL
     // statement with the actual values in the variables
