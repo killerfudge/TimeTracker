@@ -19,6 +19,16 @@ if(!isset($_SESSION['loggedin']))
         <article>
             <h1>Campaigns</h1>
             <h2>Game Master</h2>
+            <noscript>
+                <p><strong>JavaScript Must Be Enabled to Use this Page.</strong></p>
+            </noscript>
+            <table id="gmCampaignDisplay">
+                <thead>Campaign Name</thead>
+                <tbody>
+                    <?php echo $gmCampaignList ?>
+                </tbody>
+            </table>
         </article>
+        <script src="../js/campaigns.js"></script>
     </body>
 </html>

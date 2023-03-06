@@ -44,14 +44,82 @@ switch ($action)
         // Check for missing data
         if(empty($campaignName))
         {
-            $message .= '<p>Please provide a name for your campaign.</p>';
+            $message = '<p>Please provide a name for your campaign.</p>';
             include 'view/campaign creation.php';
             exit; 
         }
 
         $outcome = createCampaign($campaignName, $startingHours, $startingMinutes, $startingSeconds);
 
+        if($outcome)
+        {
+            include '../view/campaign home.php';
+            exit;
+        }
+        else
+        {
+            $message = '<p>Campaign creation unsuccessful. Please try again.';
+            include '../view/campaign creation.php';
+            exit;
+        }
+        break;
+
+    case 'home':
+        if(!isset($_SESSION['campaignInfo']))
+        {
+            $campaignId = trim(filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
+            $campaignInfo = getCampaignById($campaignId);
+            $_SESSION['campaignInfo'] = $campaignInfo;
+        }
+        include '../view/campaign home.php';
+        exit;
+
+    case 'leaveCampaign':
+        unset($_SESSION['campaignInfo']);
+        $gmCampaignList = createGMCampaignList();
+        include '../view/user home.php';
+        exit;
+
+    case 'editCampaign':
+        // Filter and store the data
+        $campaignName = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $currentHours = trim(filter_input(INPUT_POST, 'hours', FILTER_SANITIZE_NUMBER_INT));
+        $currentMinutes = trim(filter_input(INPUT_POST, 'minutes', FILTER_SANITIZE_NUMBER_INT));
+        $currentSeconds = trim(filter_input(INPUT_POST, 'seconds', FILTER_SANITIZE_NUMBER_INT));
+    
+        // Check for existing campaign
+        if($campaignName != $_SESSION['campaignInfo']['campaignName'])
+        {
+            $existingCampaign = checkExistingCampaign($campaignName);
+            if($existingCampaign)
+            {
+                $message = '<p class="notice">That campaign name is already in use. Please pick a new name.</p>';
+                include '../view/edit campaign.php';
+                exit;
+            }
+        }
+
+        $outcome = updateCampaign($campaignName, $currentHours, $currentMinutes, $currentSeconds);
+
+        if($outcome)
+        {
+            include '../view/campaign home.php';
+            exit;
+        }
+        else
+        {
+            $message = '<p>Campaign update unsuccessful. Please try again.';
+            include '../view/edit campaign.php';
+            exit;
+        }
+        break;
+
+    case 'edit':
+        include '../view/edit campaign.php';
+        exit;
+
     default:
+        $gmCampaignList = createGMCampaignList();
         include '../view/user home.php';
         break;
 }

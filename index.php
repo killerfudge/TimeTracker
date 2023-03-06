@@ -10,6 +10,8 @@ require_once 'library/connections.php';
 require_once 'library/functions.php';
 // Get the accounts model
 require_once 'model/accounts-model.php';
+// Get the accounts model
+require_once 'model/campaigns-model.php';
 
 $action = filter_input(INPUT_POST, 'action');
 if ($action == NULL)
@@ -103,7 +105,9 @@ switch ($action)
         array_pop($userData);
         // Store the array into the session
         $_SESSION['userData'] = $userData;
-        // Send them to the admin view
+        // Create list for the campaigns they are GMing
+        $gmCampaignList = createGMCampaignList();
+        // Send them to their home page
         include 'view/user home.php';
         exit;
         break;
