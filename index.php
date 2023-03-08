@@ -58,7 +58,7 @@ switch ($action)
         // Check and report the result
         if($regOutcome === 1)
         {
-            $message = "<p>Thanks for registering. Please use your email and password to login.</p>";
+            $_SESSION['message'] = "<p>Thanks for registering. Please use your email and password to login.</p>";
             header('Location: /TimeTracker/view/home.php');
             exit;
         } else 
@@ -105,8 +105,10 @@ switch ($action)
         array_pop($userData);
         // Store the array into the session
         $_SESSION['userData'] = $userData;
-        // Create list for the campaigns they are GMing
+        // Create lists for their campaigns
         $gmCampaignList = createGMCampaignList();
+        $inviteCampaignList = createInviteCampaignList();
+        $playerCampaignList = createPlayerCampaignList();
         // Send them to their home page
         include 'view/user home.php';
         exit;
@@ -115,6 +117,7 @@ switch ($action)
         case 'Logout':
             unset($_SESSION['userData']);
             unset($_SESSION['loggedin']);
+            unset($_SESSION['campaignData']);
             session_destroy();
             header('location: /TimeTracker/');
             exit;

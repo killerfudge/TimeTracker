@@ -51,6 +51,7 @@ if(!isset($_SESSION['campaignInfo']))
                     <input type='email' name='playerEmail' id='playerEmail' required>
                 <button type='submit'>Add Player</button>
                 <input type='hidden' name='action' value='addPlayer'>
+                <input type='hidden' name='campaignId' value='<?php echo $_SESSION['campaignInfo']['campaignId'] ?>'>
             </form>
         </article>
     </body>

@@ -12,4 +12,39 @@ function checkPassword($password)
     $pattern = '/^(?=.*[[:digit:]])(?=.*[[:punct:]\s])(?=.*[A-Z])(?=.*[a-z])(?:.{8,})$/';
     return preg_match($pattern, $password);
 }
+function createGMCampaignList()
+{
+    $ids = getGmCampaignIds();
+    $campaignsList = '';
+    foreach($ids as $id)
+    {
+        $campaignsList .= "<tr><td>$id[campaignName]</td>";
+        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=home&campaignId=$id[campaignId]' title='Click to go to campaign page'>Enter</a></td>";
+    }
+    return $campaignsList;
+}
+function createInviteCampaignList()
+{
+    $ids = getInviteCampaignIds();
+    $campaignsList = '';
+    foreach($ids as $id)
+    {
+        $campaign = getCampaignById($id['campaignId']);
+        $campaignsList .= "<tr><td>$campaign[campaignName]</td>";
+        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=accept&campaignId=$id[campaignId]' title='Click to go to campaign page'>Accept Invite</a></td>";
+    }
+    return $campaignsList;
+}
+function createPlayerCampaignList()
+{
+    $ids = getPlayerCampaignIds();
+    $campaignsList = '';
+    foreach($ids as $id)
+    {
+        $campaign = getCampaignById($id['campaignId']);
+        $campaignsList .= "<tr><td>$campaign[campaignName]</td>";
+        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=home&campaignId=$id[campaignId]' title='Click to go to campaign page'>Enter</a></td>";
+    }
+    return $campaignsList;
+}
 ?>

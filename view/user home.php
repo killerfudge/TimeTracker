@@ -18,14 +18,28 @@ if(!isset($_SESSION['loggedin']))
         </form>
         <article>
             <h1>Campaigns</h1>
-            <h2>Game Master</h2>
             <noscript>
                 <p><strong>JavaScript Must Be Enabled to Use this Page.</strong></p>
             </noscript>
+            <h2>Invites</h2>
+            <table id="inviteCampaignDisplay">
+                <thead>Campaign Name</thead>
+                <tbody>
+                    <?php echo $inviteCampaignList ?>
+                </tbody>
+            </table>
+            <h2>Game Master</h2>
             <table id="gmCampaignDisplay">
                 <thead>Campaign Name</thead>
                 <tbody>
                     <?php echo $gmCampaignList ?>
+                </tbody>
+            </table>
+            <h2>Player</h2>
+            <table id='playerCampaignDisplay'>
+                <thead>Campaign Name</thead>
+                <tbody>
+                    <?php echo $playerCampaignList ?>
                 </tbody>
             </table>
         </article>

@@ -85,21 +85,32 @@ function getCampaignById($campaignId)
     $stmt->closeCursor();
     return $campaignData;
 }
-function createGMCampaignList()
-{
-    $ids = getGmCampaignIds();
-    $campaignsList = '';
-    foreach($ids as $id)
-    {
-        $campaignsList .= "<tr><td>$id[campaignName]</td>";
-        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=home&campaignId=$id[campaignId]' title='Click to go to campaign page'>Enter</a></td>";
-    }
-    return $campaignsList;
-}
 function getGmCampaignIds()
 {
     $db = TimeTrackerConnect(); 
-    $sql = ' SELECT campaignId, campaignName FROM campaign WHERE gameMasterId = :userId'; 
+    $sql = 'SELECT campaignId, campaignName FROM campaign WHERE gameMasterId = :userId'; 
+    $stmt = $db->prepare($sql); 
+    $stmt->bindValue(':userId', $_SESSION['userData']['userId'], PDO::PARAM_INT); 
+    $stmt->execute(); 
+    $campaigns = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    $stmt->closeCursor(); 
+    return $campaigns; 
+}
+function getInviteCampaignIds()
+{
+    $db = TimeTrackerConnect(); 
+    $sql = 'SELECT campaignId, userId, playerStatus FROM player_lookup WHERE userId = :userId and playerStatus = 0';
+    $stmt = $db->prepare($sql); 
+    $stmt->bindValue(':userId', $_SESSION['userData']['userId'], PDO::PARAM_INT); 
+    $stmt->execute(); 
+    $campaigns = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    $stmt->closeCursor(); 
+    return $campaigns; 
+}
+function getPlayerCampaignIds()
+{
+    $db = TimeTrackerConnect(); 
+    $sql = 'SELECT campaignId, userId, playerStatus FROM player_lookup WHERE userId = :userId and playerStatus = 1';
     $stmt = $db->prepare($sql); 
     $stmt->bindValue(':userId', $_SESSION['userData']['userId'], PDO::PARAM_INT); 
     $stmt->execute(); 
@@ -135,6 +146,73 @@ function updateCampaign($campaignName, $currentHours, $currentMinutes, $currentS
 
     // Return the indication of success
     if($campainRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function getUserIdByEmail($userEmail)
+{
+    $db = TimeTrackerConnect();
+    $sql = 'SELECT userId FROM user WHERE userEmail = :userEmail';
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':userEmail', $userEmail, PDO::PARAM_STR);
+    $stmt->execute();
+    $campaignData = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $campaignData;
+}
+function invitePlayer($userId, $campaignId)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'INSERT INTO player_lookup (campaignId, userId, playerStatus) 
+            VALUES (:campaignId, :userId, 0)';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
+    $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $invite = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+    // Return the indication of success
+    if($invite == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function acceptInvite($campaignId)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'UPDATE player_lookup SET playerStatus = 1 WHERE userId = :userId and campaignId = :campaignId';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
+    $stmt->bindValue(':userId', $_SESSION['userData']['userId'], PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $campaignRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($campaignRowsChanged == 1)
     {
         return 1;
     } else {
