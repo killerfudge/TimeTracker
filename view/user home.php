@@ -18,9 +18,6 @@ if(!isset($_SESSION['loggedin']))
         </form>
         <article>
             <h1>Campaigns</h1>
-            <noscript>
-                <p><strong>JavaScript Must Be Enabled to Use this Page.</strong></p>
-            </noscript>
             <h2>Invites</h2>
             <table id="inviteCampaignDisplay">
                 <thead>Campaign Name</thead>
@@ -43,6 +40,5 @@ if(!isset($_SESSION['loggedin']))
                 </tbody>
             </table>
         </article>
-        <script src="../js/campaigns.js"></script>
     </body>
 </html>

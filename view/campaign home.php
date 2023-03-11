@@ -19,6 +19,9 @@ if(!isset($_SESSION['campaignInfo']))
         <a id='home_link' href='/TimeTracker/campaign/?action=leaveCampaign'>Campaign List</a>
         <article>
             <h1><?php echo $_SESSION['campaignInfo']['campaignName'] ?></h1>
+            <noscript>
+                <p><strong>JavaScript Must Be Enabled to Use this Page.</strong></p>
+            </noscript>
             <?php 
                 if($_SESSION['campaignInfo']['gameMasterId'] == $_SESSION['userData']['userId'])
                 {
@@ -26,15 +29,19 @@ if(!isset($_SESSION['campaignInfo']))
                     echo "<button type='submit'>Edit Campaign</button>";
                     echo "<input type='hidden' name='action' value='edit'>";
                     echo "</form>";
+                    echo "<div id='wrapper'>";
                     echo "<button type='button' id='secs'>6 seconds</button>";
                     echo "<button type='button' id='min'>1 minute</button>";
                     echo "<button type='button' id='mins'>30 minutes</button>";
                     echo "<button type='button' id='hour'>1 hour</button>";
                     echo "<button type='button' id='hours'>8 hours</button>";
+                    echo "<input type='hidden' id='campaignId' value='".$_SESSION['campaignInfo']['campaignId']."'";
+                    echo "</div>";
                 }
             ?>
             <p id="time">Time: <?php echo $_SESSION['campaignInfo']['currentHours'] ?>:<?php echo $_SESSION['campaignInfo']['currentMinutes'] ?>:<?php echo $_SESSION['campaignInfo']['currentSeconds'] ?></p>
             <table id='trackers'></table>
         </article>
+        <script src="../js/campaigns.js"></script>
     </body>
 </html>

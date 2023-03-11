@@ -1,4 +1,3 @@
-<!-- This model is for handling functions for user accounts -->
 <?php
 // This function will handle registering new users to the site
 function regUser($userEmail, $userPassword)

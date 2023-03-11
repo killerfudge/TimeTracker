@@ -179,6 +179,25 @@ switch ($action)
             include '../view/500.php';
             exit;
         }
+
+    case 'getCampaignInfo':
+        // Get the campaign id 
+        $campaignId = filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT); 
+        // Fetch the campaign by campaignId from the DB 
+        $campaign = getCampaignById($campaignId); 
+        // Convert the array to a JSON object and send it back 
+        echo json_encode($campaign);
+        break;
+
+    case 'setCampaignTime':
+        // Get the time to set
+        $currentSeconds = filter_input(INPUT_GET, 'seconds', FILTER_SANITIZE_NUMBER_INT);
+        $currentMinutes = filter_input(INPUT_GET, 'minutes', FILTER_SANITIZE_NUMBER_INT);
+        $currentHours = filter_input(INPUT_GET, 'hours', FILTER_SANITIZE_NUMBER_INT);
+        $campaignName = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        updateCampaign($campaignName, $currentHours, $currentMinutes, $currentSeconds);
+        header('location: /TimeTracker/view/campaign home.php');
+        break;
         
     default:
         $gmCampaignList = createGMCampaignList();
