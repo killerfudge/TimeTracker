@@ -65,12 +65,13 @@ switch ($action)
         break;
 
     case 'home':
-        if(!isset($_SESSION['campaignInfo']))
+        if(isset($_SESSION['campaignInfo']))
         {
-            $campaignId = trim(filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
-            $campaignInfo = getCampaignById($campaignId);
-            $_SESSION['campaignInfo'] = $campaignInfo;
+            unset($_SESSION['campaignInfo']);
         }
+        $campaignId = trim(filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
+        $campaignInfo = getCampaignById($campaignId);
+        $_SESSION['campaignInfo'] = $campaignInfo;
         include '../view/campaign home.php';
         exit;
 

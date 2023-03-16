@@ -13,6 +13,7 @@ if(!isset($_SESSION['campaignInfo']))
         <title><?php echo $_SESSION['campaignInfo']['campaignName'] ?></title>
         <link rel="stylesheet" href="/TimeTracker/css/styles.css" media="screen">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="refresh" content="5"/>
     </head>
     <body>
         <a id='logout_link' class='right' href='/TimeTracker/?action=Logout'>Logout</a>

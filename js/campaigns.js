@@ -1,6 +1,6 @@
 'use strict' 
 
-// Get increase campaign time by 6 seconds 
+// Get increase campaign time
 var clone;
 const wrapper = document.getElementById('wrapper');
 wrapper.addEventListener('click', (event) => {
@@ -63,6 +63,7 @@ wrapper.addEventListener('click', (event) => {
     }) 
 })
 
+// Round time to next increment if needed then send back to index to store in database
 function progressTime(data)
 {
     while(data.currentSeconds >= 60)
