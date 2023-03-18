@@ -52,6 +52,8 @@ wrapper.addEventListener('click', (event) => {
             data.currentHours += 8;
             progressTime(data);
         }
+        console.log("bottom");
+        progressTrackers(data.campaignId, time);
     }) 
     .catch(function (error) 
     { 
@@ -83,4 +85,156 @@ function progressTime(data)
     let campaignIdURL = "/TimeTracker/campaign/index.php?action=setCampaignTime&seconds=" 
     + data.currentSeconds + "&minutes=" + data.currentMinutes + "&hours=" + data.currentHours + "&name=" + data.campaignName; 
     fetch(campaignIdURL)
+}
+
+// Progress the time for all duration trackers
+function progressTrackers(campaignId, time)
+{
+    console.log("here");
+    let trackerURL = "/TimeTracker/campaign/index.php?action=getTrackerInfo&campaignId=" + campaignId; 
+    fetch(trackerURL)
+    .then(function (response) 
+    { 
+        clone = response.clone();
+        if (response.ok)
+        { 
+            return response.json(); 
+        } 
+        throw Error("Network response was not OK"); 
+    }) 
+    .then(function (data) 
+    {    
+        console.log(data); 
+        if(time == 'secs')
+        {
+            // Iterate over all trackers in the array
+            data.forEach(function (tracker)
+            { 
+                console.log(tracker.trackerName); 
+                tracker.remainingSeconds -= 6;
+                if(tracker.remainingSeconds < 0)
+                {
+                    tracker.remainingMinutes -= 1;
+                    if(tracker.remainingMinutes < 0)
+                    {
+                        tracker.remainingHours -= 1;
+                        if(tracker.remainingHours < 0)
+                        {
+                            let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                            fetch(deleteTrackerURL);
+                        }
+                        else
+                        {
+                            tracker.remainingMinutes += 60;
+                            tracker.remainingSeconds += 60;
+                        }
+                    }
+                    else
+                    {
+                        tracker.remainingSeconds += 60;
+                    }
+                }
+                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                fetch(updateTrackerURL);
+            })
+        }
+        else if(time == 'min')
+        {
+            // Iterate over all trackers in the array
+            data.forEach(function (tracker)
+            { 
+                console.log(tracker.trackerName); 
+                tracker.remainingMinutes -= 1;
+                if(tracker.remainingMinutes < 0)
+                {
+                    tracker.remainingHours -= 1;
+                    if(tracker.remainingHours < 0)
+                    {
+                        let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        fetch(deleteTrackerURL);
+                    }
+                    else
+                    {
+                        tracker.remainingMinutes += 60;
+                    }
+                }
+                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                fetch(updateTrackerURL);
+            })
+        }
+        else if(time == 'mins')
+        {
+            // Iterate over all trackers in the array
+            data.forEach(function (tracker)
+            { 
+                console.log(tracker.trackerName); 
+                tracker.remainingMinutes -= 30;
+                if(tracker.remainingMinutes < 0)
+                {
+                    tracker.remainingHours -= 1;
+                    if(tracker.remainingHours < 0)
+                    {
+                        let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        fetch(deleteTrackerURL);
+                    }
+                    else
+                    {
+                        tracker.remainingMinutes += 60;
+                    }
+                }
+                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                fetch(updateTrackerURL);
+            })
+        }
+        else if(time == 'hour')
+        {
+            // Iterate over all trackers in the array
+            data.forEach(function (tracker)
+            { 
+                console.log(tracker.trackerName); 
+                tracker.remainingHours -= 1;
+                if(tracker.remainingHours < 0)
+                {
+                    let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    fetch(deleteTrackerURL);
+                }
+                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                fetch(updateTrackerURL);
+            })
+        }
+        else if(time == 'hours')
+        {
+            // Iterate over all trackers in the array
+            data.forEach(function (tracker)
+            { 
+                console.log(tracker.trackerName); 
+                tracker.remainingHours -= 8;
+                if(tracker.remainingHours < 0)
+                {
+                    let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    fetch(deleteTrackerURL);
+                }
+                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId=" 
+                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                fetch(updateTrackerURL);
+            })
+        }
+    }) 
+    .catch(function (error) 
+    { 
+        console.log('There was a problem: ', error.message, clone)
+        clone.text() // 5
+        .then(function (bodyText) {
+            console.log('Received the following instead of valid JSON:', bodyText); // 6
+        });
+    }) 
 }

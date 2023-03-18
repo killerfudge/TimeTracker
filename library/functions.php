@@ -47,4 +47,15 @@ function createPlayerCampaignList()
     }
     return $campaignsList;
 }
+function createListOfTrackers()
+{
+    $trackerList = '';
+    foreach($_SESSION['trackers'] as $tracker)
+    {
+        $trackerList .= "<tr><td>$tracker[trackerName]</td>";
+        $trackerList .= "<td><p>Time Remaining: " . $tracker['remainingHours'] .= ":" . $tracker['remainingMinutes'] .= ":" . $tracker['remainingSeconds'] .= "</p></td>";
+        $trackerList .= "<td><a href='/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]' title='Click to delete this tracker'>Delete</a></td>";
+    }
+    return $trackerList;
+}
 ?>

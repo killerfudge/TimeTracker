@@ -31,7 +31,6 @@ if(!isset($_SESSION['loggedin']))
                 <button type='submit'>Create</button>
                 <input type='hidden' name='action' value='Create'>
             </form>
-            <form method="POST" action = "/TimeTracker/campaign/">
             <p><a href="/TimeTracker/campaign/">Back</a></p>
         </article>
     </body>

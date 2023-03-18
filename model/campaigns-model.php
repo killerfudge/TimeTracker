@@ -219,4 +219,99 @@ function acceptInvite($campaignId)
         return 0;
     }
 }
+function addTracker($trackerName, $remainingHours, $remainingMinutes, $remainingSeconds, $campaignId)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'INSERT INTO duration_trackers (campaignId, trackerName, remainingHours, remainingMinutes, remainingSeconds)
+        VALUES (:campaignId, :trackerName, :remainingHours, :remainingMinutes, :remainingSeconds)';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
+    $stmt->bindValue(':trackerName', $trackerName, PDO::PARAM_STR);
+    $stmt->bindValue(':remainingHours', $remainingHours, PDO::PARAM_INT);
+    $stmt->bindValue(':remainingMinutes', $remainingMinutes, PDO::PARAM_INT);
+    $stmt->bindValue(':remainingSeconds', $remainingSeconds, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $campainRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($campainRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function getTrackersByCampaignId($campaignId)
+{
+    $db = TimeTrackerConnect(); 
+    $sql = 'SELECT trackerId, trackerName, remainingHours, remainingMinutes, remainingSeconds 
+            FROM duration_trackers WHERE campaignId = :campaignId';
+    $stmt = $db->prepare($sql); 
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT); 
+    $stmt->execute(); 
+    $trackers = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    $stmt->closeCursor(); 
+    return $trackers; 
+}
+function deleteTracker($trackerId)
+{
+    // Create a connection object from the TimeTracker connection function
+    $dataBase = TimeTrackerConnect(); 
+    // The SQL statement to be used with the database 
+    $sql = 'DELETE FROM duration_trackers WHERE trackerId = :trackerId'; 
+    // The next line creates the prepared statement using the TimeTracker connection
+    $stmt = $dataBase->prepare($sql);
+    // The next lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':trackerId', $trackerId, PDO::PARAM_INT);
+    // The next line runs the prepared statement 
+    $stmt->execute(); 
+    // Ask how many rows changed as a result of our insert
+    $rowsChanged = $stmt->rowCount();
+    // The next line closes the interaction with the database 
+    $stmt->closeCursor(); 
+    // Return the indication of success (rows changed)
+    return $rowsChanged;
+}
+function updateTracker($trackerId, $remainingHours, $remainingMinutes, $remainingSeconds)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'UPDATE duration_trackers SET remainingHours = :remainingHours, remainingMinutes = :remainingMinutes, remainingSeconds = :remainingSeconds WHERE trackerId = :trackerId';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':trackerId', $trackerId, PDO::PARAM_INT);
+    $stmt->bindValue(':remainingHours', $remainingHours, PDO::PARAM_INT);
+    $stmt->bindValue(':remainingMinutes', $remainingMinutes, PDO::PARAM_INT);
+    $stmt->bindValue(':remainingSeconds', $remainingSeconds, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $trackerRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($trackerRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 ?>

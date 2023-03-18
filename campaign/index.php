@@ -69,9 +69,16 @@ switch ($action)
         {
             unset($_SESSION['campaignInfo']);
         }
+        if(isset($_SESSION['trackers']))
+        {
+            unset($_SESSION['trackers']);
+        }
         $campaignId = trim(filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
         $campaignInfo = getCampaignById($campaignId);
         $_SESSION['campaignInfo'] = $campaignInfo;
+        $trackers = getTrackersByCampaignId($_SESSION['campaignInfo']['campaignId']);
+        $_SESSION['trackers'] = $trackers;
+        $trackerList = createListOfTrackers();
         include '../view/campaign home.php';
         exit;
 
@@ -198,6 +205,41 @@ switch ($action)
         $campaignName = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         updateCampaign($campaignName, $currentHours, $currentMinutes, $currentSeconds);
         header('location: /TimeTracker/view/campaign home.php');
+        break;
+
+    case 'addTrackerView':
+        include '../view/add duration tracker.php';
+        exit;
+        break;
+
+    case 'CreateTracker':
+        $trackerName = filter_input(INPUT_POST, 'trackerName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $remainingSeconds = filter_input(INPUT_POST, 'remainingSeconds', FILTER_SANITIZE_NUMBER_INT);
+        $remainingMinutes = filter_input(INPUT_POST, 'remainingMinutes', FILTER_SANITIZE_NUMBER_INT);
+        $remainingHours = filter_input(INPUT_POST, 'remainingHours', FILTER_SANITIZE_NUMBER_INT);
+        addTracker($trackerName, $remainingHours, $remainingMinutes, $remainingSeconds, $_SESSION['campaignInfo']['campaignId']);
+        header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+        break;
+
+    case 'deleteTracker':
+        $trackerId = filter_input(INPUT_GET, 'trackerId', FILTER_SANITIZE_NUMBER_INT);
+        deleteTracker($trackerId);
+        header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+        break;
+
+    case 'updateTracker':
+        $trackerId = filter_input(INPUT_GET, 'trackerId', FILTER_SANITIZE_NUMBER_INT);
+        $remainingSeconds = filter_input(INPUT_GET, 'seconds', FILTER_SANITIZE_NUMBER_INT);
+        $remainingMinutes = filter_input(INPUT_GET, 'minutes', FILTER_SANITIZE_NUMBER_INT);
+        $remainingHours = filter_input(INPUT_GET, 'hours', FILTER_SANITIZE_NUMBER_INT);
+        updateTracker($trackerId, $remainingHours, $remainingMinutes, $remainingSeconds);
+        break;
+
+    case 'getTrackerInfo':
+        $campaignId = filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT); 
+        $trackers = getTrackersByCampaignId($campaignId);
+        // Convert the array to a JSON object and send it back 
+        echo json_encode($trackers);
         break;
         
     default:

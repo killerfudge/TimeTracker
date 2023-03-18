@@ -41,7 +41,16 @@ if(!isset($_SESSION['campaignInfo']))
                 }
             ?>
             <p id="time">Time: <?php echo $_SESSION['campaignInfo']['currentHours'] ?>:<?php echo $_SESSION['campaignInfo']['currentMinutes'] ?>:<?php echo $_SESSION['campaignInfo']['currentSeconds'] ?></p>
-            <table id='trackers'></table>
+            <form method='POST' action='/TimeTracker/campaign/'>
+                <button type='submit' id='addTracker'>Add duration tracker</button>
+                <input type='hidden' name='action' value='addTrackerView'>
+            </form>
+            <table id='trackers'>
+                <thead>Duration Trackers</thead>
+                <tbody>
+                    <?php echo $trackerList ?>
+                </tbody>
+            </table>
         </article>
         <script src="../js/campaigns.js"></script>
     </body>
