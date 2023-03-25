@@ -76,10 +76,23 @@ switch ($action)
         $campaignId = trim(filter_input(INPUT_GET, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
         $campaignInfo = getCampaignById($campaignId);
         $_SESSION['campaignInfo'] = $campaignInfo;
-        $trackers = getTrackersByCampaignId($_SESSION['campaignInfo']['campaignId']);
-        $_SESSION['trackers'] = $trackers;
-        $trackerList = createListOfTrackers();
+        if($_SESSION['campaignInfo']['inCombat'] == 0)
+        {
+            $trackers = getTrackersByCampaignId($_SESSION['campaignInfo']['campaignId']);
+            $_SESSION['trackers'] = $trackers;
+            $trackerList = createListOfTrackers();
+        }
+        else
+        {
+            $initiative = getInitiativeByCampaignId($campaignId);
+            $_SESSION['combat'] = $initiative;
+            $turnOrder = createInitiative();
+        }
         include '../view/campaign home.php';
+        exit;
+
+    case 'returnHome':
+        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
         exit;
 
     case 'leaveCampaign':
@@ -217,8 +230,33 @@ switch ($action)
         $remainingSeconds = filter_input(INPUT_POST, 'remainingSeconds', FILTER_SANITIZE_NUMBER_INT);
         $remainingMinutes = filter_input(INPUT_POST, 'remainingMinutes', FILTER_SANITIZE_NUMBER_INT);
         $remainingHours = filter_input(INPUT_POST, 'remainingHours', FILTER_SANITIZE_NUMBER_INT);
-        addTracker($trackerName, $remainingHours, $remainingMinutes, $remainingSeconds, $_SESSION['campaignInfo']['campaignId']);
-        header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+    
+        // Check for missing data
+        if(empty($trackerName) || empty($remainingSeconds) || empty($remainingMinutes) || empty($remainingHours))
+        {
+            $message = '<p>Please provide information for all empty form fields.</p>';
+            include '../view/add duration tracker.php';
+            exit; 
+        }
+
+        $checkTracker = checkExistingTracker($trackerName);
+        if($checkTracker)
+        {
+            $message = 'A duration tracker with that name already exists';
+            include '../view/add duration tracker.php';
+            exit;
+        }
+        else
+        {
+            addTracker($trackerName, $remainingHours, $remainingMinutes, $remainingSeconds, $_SESSION['campaignInfo']['campaignId']);
+            if($_SESSION['campaignInfo']['inCombat'] == 1)
+            {
+                $initiative = filter_input(INPUT_POST, 'initiative', FILTER_SANITIZE_NUMBER_INT);
+                $tracker = getTrackerByName($trackerName);
+                addInitiative($tracker['campaignId'], $tracker['trackerId'], $tracker['trackerName'], $initiative, 0);
+            }
+            header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+        }
         break;
 
     case 'deleteTracker':
@@ -240,6 +278,52 @@ switch ($action)
         $trackers = getTrackersByCampaignId($campaignId);
         // Convert the array to a JSON object and send it back 
         echo json_encode($trackers);
+        break;
+
+    case 'endCombat':
+        $campaignId = trim(filter_input(INPUT_POST, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
+        endCombat($campaignId);
+        deleteCombat($campaignId);
+        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        break;
+
+    case 'startCombat':
+        $campaignId = trim(filter_input(INPUT_POST, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
+        $trackers = getTrackersByCampaignId($campaignId);
+        setStartingCombat($trackers); //set up the combat table with existing trackers
+        setCombatStart($campaignId); //update campaign table to set combat variable
+        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        break;
+
+    case 'addCombatantView':
+        include '../view/add combatant.php';
+        exit;
+
+    case 'createCombatant':
+        $combatantName = trim(filter_input(INPUT_POST, 'combatantName', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $initiative = trim(filter_input(INPUT_POST, 'initiative', FILTER_SANITIZE_NUMBER_INT));
+    
+        // Check for missing data
+        if(empty($combatantName) || empty($initiative))
+        {
+            $message = '<p>Please provide information for all empty form fields.</p>';
+            include '../view/add combatant.php';
+            exit; 
+        }
+
+        addInitiative($_SESSION['campaignInfo']['campaignId'], NULL, $combatantName, $initiative, 0);
+        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        break;
+
+    case 'endTurn':
+        nextTurn();
+        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        break;
+
+    case 'deleteInitiative':
+        $combatId = filter_input(INPUT_GET, 'combatId', FILTER_SANITIZE_NUMBER_INT);
+        deleteInitiative($combatId);
+        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
         break;
         
     default:

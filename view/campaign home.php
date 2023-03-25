@@ -24,11 +24,16 @@ if(!isset($_SESSION['campaignInfo']))
                 <p><strong>JavaScript Must Be Enabled to Use this Page.</strong></p>
             </noscript>
             <?php 
-                if($_SESSION['campaignInfo']['gameMasterId'] == $_SESSION['userData']['userId'])
+                if($_SESSION['campaignInfo']['gameMasterId'] == $_SESSION['userData']['userId'] && $_SESSION['campaignInfo']['inCombat'] == 0)
                 {
                     echo "<form method='POST' action='/TimeTracker/campaign/'>";
                     echo "<button type='submit'>Edit Campaign</button>";
                     echo "<input type='hidden' name='action' value='edit'>";
+                    echo "</form>";
+                    echo "<form method='POST' action='/TimeTracker/campaign/'>";
+                    echo "<button type='submit'>Start Combat</button>";
+                    echo "<input type='hidden' name='action' value='startCombat'>";
+                    echo "<input type='hidden' id='campaignId' name='campaignId' value='".$_SESSION['campaignInfo']['campaignId']."'>";
                     echo "</form>";
                     echo "<div id='wrapper'>";
                     echo "<button type='button' id='secs'>6 seconds</button>";
@@ -36,8 +41,15 @@ if(!isset($_SESSION['campaignInfo']))
                     echo "<button type='button' id='mins'>30 minutes</button>";
                     echo "<button type='button' id='hour'>1 hour</button>";
                     echo "<button type='button' id='hours'>8 hours</button>";
-                    echo "<input type='hidden' id='campaignId' value='".$_SESSION['campaignInfo']['campaignId']."'";
                     echo "</div>";
+                }
+                elseif($_SESSION['campaignInfo']['gameMasterId'] == $_SESSION['userData']['userId'])
+                {
+                    echo "<form method='POST' action='/TimeTracker/campaign/'>";
+                    echo "<button type='submit'>End Combat</button>";
+                    echo "<input type='hidden' name='action' value='endCombat'>";
+                    echo "<input type='hidden' name='campaignId' value='".$_SESSION['campaignInfo']['campaignId']."'>";
+                    echo "</form>";
                 }
             ?>
             <p id="time">Time: <?php echo $_SESSION['campaignInfo']['currentHours'] ?>:<?php echo $_SESSION['campaignInfo']['currentMinutes'] ?>:<?php echo $_SESSION['campaignInfo']['currentSeconds'] ?></p>
@@ -45,12 +57,35 @@ if(!isset($_SESSION['campaignInfo']))
                 <button type='submit' id='addTracker'>Add duration tracker</button>
                 <input type='hidden' name='action' value='addTrackerView'>
             </form>
-            <table id='trackers'>
-                <thead>Duration Trackers</thead>
-                <tbody>
-                    <?php echo $trackerList ?>
-                </tbody>
-            </table>
+            <?php
+                if($_SESSION['campaignInfo']['inCombat'] == 0)
+                {
+                    echo "<table id='trackers'>";
+                    echo "<thead>Duration Trackers</thead>";
+                    echo "<tbody>";
+                    echo $trackerList;
+                    echo "</tbody>";
+                    echo "</table>";
+                }
+                else
+                {
+                    echo "<form method='POST' action='/TimeTracker/campaign/'>";
+                    echo "<button type='submit'>End Turn</button>";
+                    echo "<input type='hidden' name='action' value='endTurn'>";
+                    echo "<input type='hidden' name='campaignId' value='".$_SESSION['campaignInfo']['campaignId']."'>";
+                    echo "</form>";
+                    echo "<form method='POST' action='/TimeTracker/campaign/'>";
+                    echo "<button type='submit'>Add combatant</button>";
+                    echo "<input type='hidden' name='action' value='addCombatantView'>";
+                    echo "</form>";
+                    echo "<table id='turnOrder'>";
+                    echo "<thead>Turn Order</thead>";
+                    echo "<tbody>";
+                    echo $turnOrder;
+                    echo "</tbody>";
+                    echo "</table>";
+                }
+            ?>
         </article>
         <script src="../js/campaigns.js"></script>
     </body>

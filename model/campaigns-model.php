@@ -64,8 +64,7 @@ function checkExistingCampaign($campaignName)
 function getCampaignByName($campaignName)
 {
     $db = TimeTrackerConnect();
-    $sql = 'SELECT gameMasterId, campaignId, campaignName, currentHours, currentMinutes, currentSeconds
-            FROM campaign WHERE campaignName = :campaignName';
+    $sql = 'SELECT * FROM campaign WHERE campaignName = :campaignName';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':campaignName', $campaignName, PDO::PARAM_STR);
     $stmt->execute();
@@ -76,8 +75,7 @@ function getCampaignByName($campaignName)
 function getCampaignById($campaignId)
 {
     $db = TimeTrackerConnect();
-    $sql = 'SELECT gameMasterId, campaignId, campaignName, currentHours, currentMinutes, currentSeconds
-            FROM campaign WHERE campaignId = :campaignId';
+    $sql = 'SELECT * FROM campaign WHERE campaignId = :campaignId';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
     $stmt->execute();
@@ -254,12 +252,24 @@ function addTracker($trackerName, $remainingHours, $remainingMinutes, $remaining
 function getTrackersByCampaignId($campaignId)
 {
     $db = TimeTrackerConnect(); 
-    $sql = 'SELECT trackerId, trackerName, remainingHours, remainingMinutes, remainingSeconds 
+    $sql = 'SELECT campaignId, trackerId, trackerName, remainingHours, remainingMinutes, remainingSeconds 
             FROM duration_trackers WHERE campaignId = :campaignId';
     $stmt = $db->prepare($sql); 
     $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT); 
     $stmt->execute(); 
-    $trackers = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    $trackers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->closeCursor(); 
+    return $trackers; 
+}
+function getTrackerByName($trackerName)
+{
+    $db = TimeTrackerConnect(); 
+    $sql = 'SELECT campaignId, trackerId, trackerName, remainingHours, remainingMinutes, remainingSeconds 
+            FROM duration_trackers WHERE trackerName = :trackerName';
+    $stmt = $db->prepare($sql); 
+    $stmt->bindValue(':trackerName', $trackerName, PDO::PARAM_STR); 
+    $stmt->execute(); 
+    $trackers = $stmt->fetch(PDO::FETCH_ASSOC); 
     $stmt->closeCursor(); 
     return $trackers; 
 }
@@ -299,6 +309,203 @@ function updateTracker($trackerId, $remainingHours, $remainingMinutes, $remainin
     $stmt->bindValue(':remainingHours', $remainingHours, PDO::PARAM_INT);
     $stmt->bindValue(':remainingMinutes', $remainingMinutes, PDO::PARAM_INT);
     $stmt->bindValue(':remainingSeconds', $remainingSeconds, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $trackerRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($trackerRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function getInitiativeByCampaignId($campaignId)
+{
+    $db = TimeTrackerConnect(); 
+    $sql = 'SELECT * FROM combat WHERE campaignId = :campaignId';
+    $stmt = $db->prepare($sql); 
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT); 
+    $stmt->execute(); 
+    $initiative = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    $stmt->closeCursor(); 
+    return $initiative;
+}
+// This function will check if a tracker name already exists
+function checkExistingTracker($trackerName)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'SELECT trackerName FROM duration_trackers WHERE trackerName = :trackerName and campaignId = :campaignId';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':trackerName', $trackerName, PDO::PARAM_STR);
+    $stmt->bindValue(':campaignId', $_SESSION['campaignInfo']['campaignId'], PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Get the data from the database
+    $matchName = $stmt->fetch(PDO::FETCH_NUM);
+    // Close the database interaction
+    $stmt->closeCursor();
+    // Return the indication of success 
+    if(empty($matchName))
+    {
+        return 0;
+    } else 
+    {
+        return 1;
+    }
+}
+function addInitiative($campaignId, $trackerId, $combatName, $initiative, $currentTurn)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'INSERT INTO combat (campaignId, trackerId, combatName, initiative, currentTurn)
+        VALUES (:campaignId, :trackerId, :combatName, :initiative, :currentTurn)';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
+    $stmt->bindValue(':trackerId', $trackerId, PDO::PARAM_INT);
+    $stmt->bindValue(':combatName', $combatName, PDO::PARAM_STR);
+    $stmt->bindValue(':initiative', $initiative, PDO::PARAM_INT);
+    $stmt->bindValue(':currentTurn', $currentTurn, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $campainRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($campainRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function updateInitiative($combatId, $initiative, $currentTurn)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'UPDATE combat SET initiative = :initiative, currentTurn = :currentTurn WHERE combatId = :combatId';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':combatId', $combatId, PDO::PARAM_INT);
+    $stmt->bindValue(':currentTurn', $currentTurn, PDO::PARAM_INT);
+    $stmt->bindValue(':initiative', $initiative, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $trackerRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($trackerRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function setCombatStart($campaignId)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'UPDATE campaign SET inCombat = 1 WHERE campaignId = :campaignId';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
+    // Insert the data
+    $stmt->execute();
+    // Ask how many rows changed as a result of our insert
+    $trackerRowsChanged = $stmt->rowCount();
+    // Close the database interaction
+    $stmt->closeCursor();
+
+    // Return the indication of success
+    if($trackerRowsChanged == 1)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function deleteCombat($campaignId)
+{
+    // Create a connection object from the TimeTracker connection function
+    $dataBase = TimeTrackerConnect(); 
+    // The SQL statement to be used with the database 
+    $sql = 'DELETE FROM combat WHERE campaignId = :campaignId'; 
+    // The next line creates the prepared statement using the TimeTracker connection
+    $stmt = $dataBase->prepare($sql);
+    // The next lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
+    // The next line runs the prepared statement 
+    $stmt->execute(); 
+    // Ask how many rows changed as a result of our insert
+    $rowsChanged = $stmt->rowCount();
+    // The next line closes the interaction with the database 
+    $stmt->closeCursor(); 
+    // Return the indication of success (rows changed)
+    return $rowsChanged;
+}
+function deleteInitiative($combatId)
+{
+    // Create a connection object from the TimeTracker connection function
+    $dataBase = TimeTrackerConnect(); 
+    // The SQL statement to be used with the database 
+    $sql = 'DELETE FROM combat WHERE combatId = :combatId'; 
+    // The next line creates the prepared statement using the TimeTracker connection
+    $stmt = $dataBase->prepare($sql);
+    // The next lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':combatId', $combatId, PDO::PARAM_INT);
+    // The next line runs the prepared statement 
+    $stmt->execute(); 
+    // Ask how many rows changed as a result of our insert
+    $rowsChanged = $stmt->rowCount();
+    // The next line closes the interaction with the database 
+    $stmt->closeCursor(); 
+    // Return the indication of success (rows changed)
+    return $rowsChanged;
+}
+function endCombat($campaignId)
+{
+    // Create a connection object using the TimeTracker connection function
+    $db = TimeTrackerConnect();
+    // The SQL statement
+    $sql = 'UPDATE campaign SET inCombat = 0 WHERE campaignId = :campaignId';
+    // Create the prepared statement using the TimeTracker connection
+    $stmt = $db->prepare($sql);
+    // The next four lines replace the placeholders in the SQL
+    // statement with the actual values in the variables
+    // and tells the database the type of data it is
+    $stmt->bindValue(':campaignId', $campaignId, PDO::PARAM_INT);
     // Insert the data
     $stmt->execute();
     // Ask how many rows changed as a result of our insert

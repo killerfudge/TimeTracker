@@ -110,7 +110,7 @@ function progressTrackers(campaignId, time)
             // Iterate over all trackers in the array
             data.forEach(function (tracker)
             { 
-                console.log(tracker.trackerName); 
+                console.log(tracker.trackerName);
                 tracker.remainingSeconds -= 6;
                 if(tracker.remainingSeconds < 0)
                 {

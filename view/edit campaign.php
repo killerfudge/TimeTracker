@@ -37,7 +37,7 @@ if(!isset($_SESSION['campaignInfo']))
             </form>
             <form method='POST' action='/TimeTracker/campaign/'>
                 <button type='submit'>Cancel</button>
-                <input type='hidden' name='action' value='home'>
+                <input type='hidden' name='action' value='returnHome'>
             </form>
             <h2>Add Players</h2>
             <?php
