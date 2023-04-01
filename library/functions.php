@@ -18,8 +18,16 @@ function createGMCampaignList()
     $campaignsList = '';
     foreach($ids as $id)
     {
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            $url = '/TimeTracker/campaign?action=home&campaignId=$id[campaignId]';
+        }
+        else
+        {
+            $url = '/campaign?action=home&campaignId=$id[campaignId]';
+        }
         $campaignsList .= "<tr><td>$id[campaignName]</td>";
-        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=home&campaignId=$id[campaignId]' title='Click to go to campaign page'>Enter</a></td>";
+        $campaignsList .= "<td><a href='$url' title='Click to go to campaign page'>Enter</a></td>";
     }
     return $campaignsList;
 }
@@ -29,9 +37,17 @@ function createInviteCampaignList()
     $campaignsList = '';
     foreach($ids as $id)
     {
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            $url = '/TimeTracker/campaign?action=accept&campaignId=$id[campaignId]';
+        }
+        else
+        {
+            $url = '/campaign?action=accept&campaignId=$id[campaignId]';
+        }
         $campaign = getCampaignById($id['campaignId']);
         $campaignsList .= "<tr><td>$campaign[campaignName]</td>";
-        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=accept&campaignId=$id[campaignId]' title='Click to go to campaign page'>Accept Invite</a></td>";
+        $campaignsList .= "<td><a href='$url' title='Click to go to campaign page'>Accept Invite</a></td>";
     }
     return $campaignsList;
 }
@@ -41,9 +57,17 @@ function createPlayerCampaignList()
     $campaignsList = '';
     foreach($ids as $id)
     {
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            $url = '/TimeTracker/campaign?action=home&campaignId=$id[campaignId]';
+        }
+        else
+        {
+            $url = '/campaign?action=home&campaignId=$id[campaignId]';
+        }
         $campaign = getCampaignById($id['campaignId']);
         $campaignsList .= "<tr><td>$campaign[campaignName]</td>";
-        $campaignsList .= "<td><a href='/TimeTracker/campaign?action=home&campaignId=$id[campaignId]' title='Click to go to campaign page'>Enter</a></td>";
+        $campaignsList .= "<td><a href='$url' title='Click to go to campaign page'>Enter</a></td>";
     }
     return $campaignsList;
 }
