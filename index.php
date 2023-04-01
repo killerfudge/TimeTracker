@@ -53,17 +53,18 @@ switch ($action)
         $regOutcome = regUser($userEmail, $hashedPassword);
     
         // Check and report the result
-        if($regOutcome === 1)
-        {
-            $_SESSION['message'] = "<p>Thanks for registering. Please use your email and password to login.</p>";
-            header('Location: /TimeTracker/view/home.php');
-            exit;
-        } else 
-        {
-            $message = "<p>Sorry, but the registration failed. Please try again.</p>";
-            include '../view/home.php';
-            exit;
-        }
+        // if($regOutcome === 1)
+        // {
+        //     $_SESSION['message'] = "<p>Thanks for registering. Please use your email and password to login.</p>";
+        //     header('Location: /TimeTracker/view/home.php');
+        //     exit;
+        // } else 
+        // {
+        //     $message = "<p>Sorry, but the registration failed. Please try again.</p>";
+        //     include 'view/home.php';
+        //     exit;
+        // }
+        echo 'register';
         break;
     
     case 'Login':
@@ -108,7 +109,7 @@ switch ($action)
         $playerCampaignList = createPlayerCampaignList();
         // Send them to their home page
         //include 'view/user home.php';
-        echo 'hello';
+        echo 'login';
         exit;
         break;
     
@@ -117,7 +118,8 @@ switch ($action)
             unset($_SESSION['loggedin']);
             unset($_SESSION['campaignData']);
             session_destroy();
-            header('location: /TimeTracker/');
+            echo 'logout';
+            //header('location: /TimeTracker/');
             exit;
     
     default:
