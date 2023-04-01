@@ -15,7 +15,7 @@
                     echo $message;
                 }
             ?>
-            <form id="login" class="center" method="POST" action="/rpgtimetracker/">
+            <form id="login" class="center" method="POST" action="/https://rpgtimetracker.herokuapp.com/">
                 <label id="loginEmail" for="userEmail" class="left">Email</label>
                 <input name="userEmail" id="userEmail" type="email" required <?php if(isset($userEmail)){echo "value='$userEmail'";}  ?>>
                 <span id="passwordSpan" class="left">Password must be at least 8 characters and have at least 1 uppercase character, 1 number and 1 special character.</span>
@@ -25,7 +25,7 @@
                 <input type="hidden" name="action" value="Login">
             </form>
             <h2>No Account? Register Now!</h2>
-            <form id="register" method="POST" action="/rpgtimetracker/">
+            <form id="register" method="POST" action="/https://rpgtimetracker.herokuapp.com/">
                 <label id="emailRegister" for="userEmail">Email</label>
                 <input name="userEmail" id="userEmail" type="email" required <?php if(isset($userEmail)){echo "value='$userEmail'";}  ?>>
                 <span id="passwordSpan">Password must be at least 8 characters and have at least 1 uppercase character, 1 number and 1 special character.</span>
