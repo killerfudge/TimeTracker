@@ -13,7 +13,14 @@ wrapper.addEventListener('click', (event) => {
     console.log(`time is: ${time}`);
     let campaignId = document.getElementById('campaignId');
     console.log(`campaignId is: ${campaignId.value}`);
-    let campaignIdURL = "/TimeTracker/campaign/index.php?action=getCampaignInfo&campaignId=" + campaignId.value; 
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        let campaignIdURL = "/TimeTracker/campaign/index.php?action=getCampaignInfo&campaignId=" + campaignId.value;
+    }
+    else
+    {
+        let campaignIdURL = "/campaign/index.php?action=getCampaignInfo&campaignId=" + campaignId.value;
+    } 
     fetch(campaignIdURL)
     .then(function (response) 
     { 
@@ -82,8 +89,16 @@ function progressTime(data)
     {
         data.currentHours -= 24;
     }
-    let campaignIdURL = "/TimeTracker/campaign/index.php?action=setCampaignTime&seconds=" 
-    + data.currentSeconds + "&minutes=" + data.currentMinutes + "&hours=" + data.currentHours + "&name=" + data.campaignName; 
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        let campaignIdURL = "/TimeTracker/campaign/index.php?action=setCampaignTime&seconds=" 
+        + data.currentSeconds + "&minutes=" + data.currentMinutes + "&hours=" + data.currentHours + "&name=" + data.campaignName; 
+    }
+    else
+    {
+        let campaignIdURL = "/campaign/index.php?action=setCampaignTime&seconds=" 
+        + data.currentSeconds + "&minutes=" + data.currentMinutes + "&hours=" + data.currentHours + "&name=" + data.campaignName; 
+    } 
     fetch(campaignIdURL)
 }
 
@@ -91,7 +106,14 @@ function progressTime(data)
 function progressTrackers(campaignId, time)
 {
     console.log("here");
-    let trackerURL = "/TimeTracker/campaign/index.php?action=getTrackerInfo&campaignId=" + campaignId; 
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        let trackerURL = "/TimeTracker/campaign/index.php?action=getTrackerInfo&campaignId=" + campaignId; 
+    }
+    else
+    {
+        let trackerURL = "/campaign/index.php?action=getTrackerInfo&campaignId=" + campaignId; 
+    } 
     fetch(trackerURL)
     .then(function (response) 
     { 
@@ -120,7 +142,14 @@ function progressTrackers(campaignId, time)
                         tracker.remainingHours -= 1;
                         if(tracker.remainingHours < 0)
                         {
-                            let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                            if($_SERVER['HTTP_HOST'] == 'localhost')
+                            {
+                                let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId;
+                            }
+                            else
+                            {
+                                let deleteTrackerURL = "/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId;
+                            } 
                             fetch(deleteTrackerURL);
                         }
                         else
@@ -134,9 +163,18 @@ function progressTrackers(campaignId, time)
                         tracker.remainingSeconds += 60;
                     }
                 }
-                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
-                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
-                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                if($_SERVER['HTTP_HOST'] == 'localhost')
+                {
+                    let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
+                else
+                {
+                    let updateTrackerURL = "/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
                 fetch(updateTrackerURL);
             })
         }
@@ -152,7 +190,14 @@ function progressTrackers(campaignId, time)
                     tracker.remainingHours -= 1;
                     if(tracker.remainingHours < 0)
                     {
-                        let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        if($_SERVER['HTTP_HOST'] == 'localhost')
+                        {
+                            let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        }
+                        else
+                        {
+                            let deleteTrackerURL = "/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        }
                         fetch(deleteTrackerURL);
                     }
                     else
@@ -160,9 +205,18 @@ function progressTrackers(campaignId, time)
                         tracker.remainingMinutes += 60;
                     }
                 }
-                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
-                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
-                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                if($_SERVER['HTTP_HOST'] == 'localhost')
+                {
+                    let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
+                else
+                {
+                    let updateTrackerURL = "/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
                 fetch(updateTrackerURL);
             })
         }
@@ -178,7 +232,14 @@ function progressTrackers(campaignId, time)
                     tracker.remainingHours -= 1;
                     if(tracker.remainingHours < 0)
                     {
-                        let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        if($_SERVER['HTTP_HOST'] == 'localhost')
+                        {
+                            let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        }
+                        else
+                        {
+                            let deleteTrackerURL = "/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                        }
                         fetch(deleteTrackerURL);
                     }
                     else
@@ -186,9 +247,18 @@ function progressTrackers(campaignId, time)
                         tracker.remainingMinutes += 60;
                     }
                 }
-                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
-                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
-                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                if($_SERVER['HTTP_HOST'] == 'localhost')
+                {
+                    let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
+                else
+                {
+                    let updateTrackerURL = "/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
                 fetch(updateTrackerURL);
             })
         }
@@ -201,12 +271,28 @@ function progressTrackers(campaignId, time)
                 tracker.remainingHours -= 1;
                 if(tracker.remainingHours < 0)
                 {
-                    let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    if($_SERVER['HTTP_HOST'] == 'localhost')
+                    {
+                        let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    }
+                    else
+                    {
+                        let deleteTrackerURL = "/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    }
                     fetch(deleteTrackerURL);
                 }
-                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
-                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
-                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                if($_SERVER['HTTP_HOST'] == 'localhost')
+                {
+                    let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
+                else
+                {
+                    let updateTrackerURL = "/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
                 fetch(updateTrackerURL);
             })
         }
@@ -219,12 +305,28 @@ function progressTrackers(campaignId, time)
                 tracker.remainingHours -= 8;
                 if(tracker.remainingHours < 0)
                 {
-                    let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    if($_SERVER['HTTP_HOST'] == 'localhost')
+                    {
+                        let deleteTrackerURL = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    }
+                    else
+                    {
+                        let deleteTrackerURL = "/campaign/index.php?action=deleteTracker&trackerId=" + tracker.trackerId; 
+                    }
                     fetch(deleteTrackerURL);
                 }
-                let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId=" 
-                + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
-                + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                if($_SERVER['HTTP_HOST'] == 'localhost')
+                {
+                    let updateTrackerURL = "/TimeTracker/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
+                else
+                {
+                    let updateTrackerURL = "/campaign/index.php?action=updateTracker&trackerId="
+                    + tracker.trackerId + "&seconds=" + tracker.remainingSeconds + "&minutes=" 
+                    + tracker.remainingMinutes + "&hours=" + tracker.remainingHours;
+                }
                 fetch(updateTrackerURL);
             })
         }

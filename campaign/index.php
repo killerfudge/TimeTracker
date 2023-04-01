@@ -90,7 +90,14 @@ switch ($action)
         exit;
 
     case 'returnHome':
-        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
         exit;
 
     case 'leaveCampaign':
@@ -215,7 +222,14 @@ switch ($action)
         $currentHours = filter_input(INPUT_GET, 'hours', FILTER_SANITIZE_NUMBER_INT);
         $campaignName = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         updateCampaign($campaignName, $currentHours, $currentMinutes, $currentSeconds);
-        header('location: /TimeTracker/view/campaign home.php');
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header('location: /TimeTracker/view/campaign home.php');
+        }
+        else
+        {
+            header('location: /view/campaign home.php');
+        }
         break;
 
     case 'addTrackerView':
@@ -253,14 +267,28 @@ switch ($action)
                 $tracker = getTrackerByName($trackerName);
                 addInitiative($tracker['campaignId'], $tracker['trackerId'], $tracker['trackerName'], $initiative, 0);
             }
-            header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+            if($_SERVER['HTTP_HOST'] == 'localhost')
+            {
+                header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+            }
+            else
+            {
+                header("location: /campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+            }
         }
         break;
 
     case 'deleteTracker':
         $trackerId = filter_input(INPUT_GET, 'trackerId', FILTER_SANITIZE_NUMBER_INT);
         deleteTracker($trackerId);
-        header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/?action=home&campaignId=" . $_SESSION['campaignInfo']['campaignId']);
+        }
         break;
 
     case 'updateTracker':
@@ -290,7 +318,14 @@ switch ($action)
         $trackers = getTrackersByCampaignId($campaignId);
         setStartingCombat($trackers); //set up the combat table with existing trackers
         setCombatStart($campaignId); //update campaign table to set combat variable
-        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
         break;
 
     case 'addCombatantView':
@@ -310,18 +345,39 @@ switch ($action)
         }
 
         addInitiative($_SESSION['campaignInfo']['campaignId'], NULL, $combatantName, $initiative, 0);
-        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
         break;
 
     case 'endTurn':
         nextTurn();
-        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
         break;
 
     case 'deleteInitiative':
         $combatId = filter_input(INPUT_GET, 'combatId', FILTER_SANITIZE_NUMBER_INT);
         deleteInitiative($combatId);
-        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
         break;
         
     default:
