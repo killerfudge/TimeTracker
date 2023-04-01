@@ -34,7 +34,7 @@ switch ($action)
         if($existingEmail)
         {
             $message = '<p class="notice">That email address already exists. Do you want to login instead?</p>';
-            include '../view/home.php';
+            include 'view/home.php';
             exit;
         }
     
@@ -42,7 +42,7 @@ switch ($action)
         if(empty($userEmail) || empty($checkPassword))
         {
             $message = '<p>Please provide information for all empty form fields.</p>';
-            include '../view/home.php';
+            include 'view/home.php';
             exit; 
         }
     
@@ -107,7 +107,8 @@ switch ($action)
         $inviteCampaignList = createInviteCampaignList();
         $playerCampaignList = createPlayerCampaignList();
         // Send them to their home page
-        include 'view/user home.php';
+        //include 'view/user home.php';
+        echo 'hello';
         exit;
         break;
     
