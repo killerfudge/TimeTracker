@@ -1,17 +1,31 @@
 <?php
 if(!isset($_SESSION['loggedin']))
 {
-    header('Location: /TimeTracker/');
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        header('Location: /TimeTracker/');
+    }
+    else
+    {
+        header('Location: /');
+    }
 }
 if(!isset($_SESSION['campaignInfo']))
 {
-    header('Location: /TimeTracker/campaign/');
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        header('Location: /TimeTracker/campaign/');
+    }
+    else
+    {
+        header('Location: /campaign/');
+    }
 }
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Edit <?php echo $_SESSION['campaignInfo']['campaignName'] ?></title>
-        <link rel="stylesheet" href="/TimeTracker/css/styles.css" media="screen">
+        <link rel="stylesheet" href="/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>css/styles.css" media="screen">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
@@ -23,7 +37,7 @@ if(!isset($_SESSION['campaignInfo']))
                     echo $message;
                 }
             ?>
-            <form id='campaignEditter' method='POST' action='/TimeTracker/campaign/'>
+            <form id='campaignEditter' method='POST' action='/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>campaign/'>
                 <label id='nameLabel' for='name'>Campaign Name</label>
                     <input type='text' name='name' id='name' value='<?php echo $_SESSION['campaignInfo']['campaignName'] ?>'>
                 <label id='hoursLabel' for='hours'>Set Current Hours</label>
@@ -35,7 +49,7 @@ if(!isset($_SESSION['campaignInfo']))
                 <button type='submit'>Edit</button>
                 <input type='hidden' name='action' value='editCampaign'>
             </form>
-            <form method='POST' action='/TimeTracker/campaign/'>
+            <form method='POST' action='/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>campaign/'>
                 <button type='submit'>Cancel</button>
                 <input type='hidden' name='action' value='returnHome'>
             </form>
@@ -46,7 +60,7 @@ if(!isset($_SESSION['campaignInfo']))
                     echo $message;
                 }
             ?>
-            <form id='addPlayers' method='POST' action='/TimeTracker/campaign/'>
+            <form id='addPlayers' method='POST' action='/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>campaign/'>
                 <label id='playerEmailLabel' for='playerEmail'>Player Email</label>
                     <input type='email' name='playerEmail' id='playerEmail' required>
                 <button type='submit'>Add Player</button>

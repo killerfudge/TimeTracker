@@ -1,13 +1,20 @@
 <?php
 if(!isset($_SESSION['loggedin']))
 {
-    header('Location: /TimeTracker/');
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        header('Location: /TimeTracker/');
+    }
+    else
+    {
+        header('Location: /');
+    }
 }
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Create Campaign</title>
-        <link rel="stylesheet" href="/TimeTracker/css/styles.css" media="screen">
+        <link rel="stylesheet" href="/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>css/styles.css" media="screen">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
@@ -19,7 +26,7 @@ if(!isset($_SESSION['loggedin']))
                     echo $message;
                 }
             ?>
-            <form id='create_form' method="POST" action="/TimeTracker/campaign/">
+            <form id='create_form' method="POST" action="/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>campaign/">
                 <label for='campaignName'>Campaign Name</label>
                 <input type='text' name='campaignName' required <?php if(isset($campaignName)){ echo "value='$campaignName'";} ?>>
                 <label for='startingHours'>Starting campaign hours</label>
@@ -31,7 +38,7 @@ if(!isset($_SESSION['loggedin']))
                 <button type='submit'>Create</button>
                 <input type='hidden' name='action' value='Create'>
             </form>
-            <p><a href="/TimeTracker/campaign/">Back</a></p>
+            <p><a href="/<?php if($_SERVER['HTTP_HOST'] == 'localhost'){echo "TimeTracker/";} ?>campaign/">Back</a></p>
         </article>
     </body>
 </html>

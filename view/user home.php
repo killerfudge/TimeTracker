@@ -1,7 +1,14 @@
 <?php
 if(!isset($_SESSION['loggedin']))
 {
-    header('Location: /TimeTracker/');
+    if($_SERVER['HTTP_HOST'] == 'localhost')
+    {
+        header('Location: /TimeTracker/');
+    }
+    else
+    {
+        header('Location: /');
+    }
 }
 ?><!DOCTYPE html>
 <html lang="en">

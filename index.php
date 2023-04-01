@@ -56,7 +56,14 @@ switch ($action)
         if($regOutcome === 1)
         {
             $_SESSION['message'] = "<p>Thanks for registering. Please use your email and password to login.</p>";
-            header('Location: /TimeTracker/view/home.php');
+            if($_SERVER['HTTP_HOST'] == 'localhost')
+            {
+                header('Location: /TimeTracker/view/home.php');
+            }
+            else
+            {
+                header('Location: /view/home.php');
+            }
             exit;
         } else 
         {
@@ -116,7 +123,14 @@ switch ($action)
             unset($_SESSION['loggedin']);
             unset($_SESSION['campaignData']);
             session_destroy();
-            header('location: /TimeTracker/');
+            if($_SERVER['HTTP_HOST'] == 'localhost')
+            {
+                header('location: /TimeTracker/');
+            }
+            else
+            {
+                header('location: /');
+            }
             exit;
     
     default:

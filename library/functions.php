@@ -76,9 +76,17 @@ function createListOfTrackers()
     $trackerList = '';
     foreach($_SESSION['trackers'] as $tracker)
     {
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            $url = '/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]';
+        }
+        else
+        {
+            $url = '/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]';
+        }
         $trackerList .= "<tr><td>$tracker[trackerName]</td>";
         $trackerList .= "<td><p>Time Remaining: " . $tracker['remainingHours'] .= ":" . $tracker['remainingMinutes'] .= ":" . $tracker['remainingSeconds'] .= "</p></td>";
-        $trackerList .= "<td><a href='/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]' title='Click to delete this tracker'>Delete</a></td>";
+        $trackerList .= "<td><a href='$url' title='Click to delete this tracker'>Delete</a></td>";
     }
     return $trackerList;
 }
@@ -110,7 +118,15 @@ function createInitiative()
             $tracker = getTrackerByName($turn['combatName']);
             $initiative .= "<td><p>Time Remaining: " . $tracker['remainingHours'] .= ":" . $tracker['remainingMinutes'] .= ":" . $tracker['remainingSeconds'] .= "</p></td>";
         }
-        $initiative .= "<td><a href='/TimeTracker/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]' title='Click to delete this initiative slot'>Delete</a></td>";
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            $url = '/TimeTracker/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]';
+        }
+        else
+        {
+            $url = '/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]';
+        }
+        $initiative .= "<td><a href='$url' title='Click to delete this initiative slot'>Delete</a></td>";
     }
     return $initiative;
 }
