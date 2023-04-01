@@ -310,7 +310,14 @@ switch ($action)
         $campaignId = trim(filter_input(INPUT_POST, 'campaignId', FILTER_SANITIZE_NUMBER_INT));
         endCombat($campaignId);
         deleteCombat($campaignId);
-        header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        if($_SERVER['HTTP_HOST'] == 'localhost')
+        {
+            header("location: /TimeTracker/campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
+        else
+        {
+            header("location: /campaign/index.php?action=home&campaignId=".$_SESSION['campaignInfo']['campaignId']);
+        }
         break;
 
     case 'startCombat':
