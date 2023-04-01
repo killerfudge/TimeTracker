@@ -1,9 +1,6 @@
 <?php
 // Create or access a Session
 session_start();
-
-// Get the database user info
-require_once 'databaseInfo.php';
 // Get the database connection file
 require_once 'library/connections.php';
 // Get the functions library
