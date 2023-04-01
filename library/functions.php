@@ -20,11 +20,11 @@ function createGMCampaignList()
     {
         if($_SERVER['HTTP_HOST'] == 'localhost')
         {
-            $url = '/TimeTracker/campaign?action=home&campaignId=$id[campaignId]';
+            $url = "/TimeTracker/campaign?action=home&campaignId=$id[campaignId]";
         }
         else
         {
-            $url = '/campaign?action=home&campaignId=$id[campaignId]';
+            $url = "/campaign?action=home&campaignId=$id[campaignId]";
         }
         $campaignsList .= "<tr><td>$id[campaignName]</td>";
         $campaignsList .= "<td><a href='$url' title='Click to go to campaign page'>Enter</a></td>";
@@ -39,11 +39,11 @@ function createInviteCampaignList()
     {
         if($_SERVER['HTTP_HOST'] == 'localhost')
         {
-            $url = '/TimeTracker/campaign?action=accept&campaignId=$id[campaignId]';
+            $url = "/TimeTracker/campaign?action=accept&campaignId=$id[campaignId]";
         }
         else
         {
-            $url = '/campaign?action=accept&campaignId=$id[campaignId]';
+            $url = "/campaign?action=accept&campaignId=$id[campaignId]";
         }
         $campaign = getCampaignById($id['campaignId']);
         $campaignsList .= "<tr><td>$campaign[campaignName]</td>";
@@ -59,11 +59,11 @@ function createPlayerCampaignList()
     {
         if($_SERVER['HTTP_HOST'] == 'localhost')
         {
-            $url = '/TimeTracker/campaign?action=home&campaignId=$id[campaignId]';
+            $url = "/TimeTracker/campaign?action=home&campaignId=$id[campaignId]";
         }
         else
         {
-            $url = '/campaign?action=home&campaignId=$id[campaignId]';
+            $url = "/campaign?action=home&campaignId=$id[campaignId]";
         }
         $campaign = getCampaignById($id['campaignId']);
         $campaignsList .= "<tr><td>$campaign[campaignName]</td>";
@@ -78,11 +78,11 @@ function createListOfTrackers()
     {
         if($_SERVER['HTTP_HOST'] == 'localhost')
         {
-            $url = '/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]';
+            $url = "/TimeTracker/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]";
         }
         else
         {
-            $url = '/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]';
+            $url = "/campaign/index.php?action=deleteTracker&trackerId=$tracker[trackerId]";
         }
         $trackerList .= "<tr><td>$tracker[trackerName]</td>";
         $trackerList .= "<td><p>Time Remaining: " . $tracker['remainingHours'] .= ":" . $tracker['remainingMinutes'] .= ":" . $tracker['remainingSeconds'] .= "</p></td>";
@@ -120,11 +120,11 @@ function createInitiative()
         }
         if($_SERVER['HTTP_HOST'] == 'localhost')
         {
-            $url = '/TimeTracker/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]';
+            $url = "/TimeTracker/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]";
         }
         else
         {
-            $url = '/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]';
+            $url = "/campaign/index.php?action=deleteInitiative&combatId=$turn[combatId]";
         }
         $initiative .= "<td><a href='$url' title='Click to delete this initiative slot'>Delete</a></td>";
     }
